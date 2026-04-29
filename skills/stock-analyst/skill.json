@@ -1,0 +1,36 @@
+{
+  "name": "stock-analyst",
+  "version": "1.0.0",
+  "description": "中国A股交易分析技能。通过内置脚本直接调用 MCP 服务获取实时股票数据，结合 sequential-thinking 对持仓股票进行 buy/sell/hold 决策，提供目标价、止损价、退出计划和风险收益比。",
+  "author": "alex",
+  "entrypoint": "SKILL.md",
+  "type": "agent-skill",
+  "language": "markdown",
+  "dependencies": [
+    {
+      "name": "python3",
+      "version": ">=3.6",
+      "optional": false,
+      "description": "Python 3 stdlib only (urllib, json, argparse, re, sys)"
+    }
+  ],
+  "scripts": [
+    {
+      "name": "stock_query.py",
+      "path": "scripts/stock_query.py",
+      "description": "Query Chinese A-share stock data via MCP streamable-http"
+    }
+  ],
+  "tags": ["stock", "trading", "analysis", "a-share", "china", "finance"],
+  "triggers": [
+    "stock-analyst",
+    "stock analysis",
+    "A-share",
+    "A股",
+    "buy/sell/hold",
+    "持仓",
+    "加仓",
+    "平仓",
+    "止损"
+  ]
+}

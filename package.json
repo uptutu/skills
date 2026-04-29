@@ -1,0 +1,18 @@
+{
+  "name": "uptutu-skills",
+  "version": "1.0.0",
+  "description": "A collection of AI agent skills for Claude Code and compatible tools",
+  "private": true,
+  "skills": [
+    {
+      "name": "stock-analyst",
+      "path": "skills/stock-analyst"
+    }
+  ],
+  "scripts": {
+    "stock-query": "python3 skills/stock-analyst/scripts/stock_query.py"
+  },
+  "keywords": ["ai-agent", "skill", "claude-code", "stock-analysis"],
+  "author": "alex",
+  "license": "MIT"
+}

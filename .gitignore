@@ -1,0 +1,16 @@
+# OMC runtime state
+.omc/
+
+# Python
+__pycache__/
+*.pyc
+
+# OS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Node
+node_modules/
