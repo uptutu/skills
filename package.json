@@ -10,7 +10,8 @@
     }
   ],
   "scripts": {
-    "stock-query": "python3 skills/stock-analyst/scripts/stock_query.py"
+    "stock-query": "python3 skills/stock-analyst/scripts/stock_query.py",
+    "market-env": "python3 skills/stock-analyst/scripts/market_env.py"
   },
   "keywords": ["ai-agent", "skill", "claude-code", "stock-analysis"],
   "author": "alex",
