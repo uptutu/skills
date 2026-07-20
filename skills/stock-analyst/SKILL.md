@@ -1,7 +1,7 @@
 ---
 name: stock-analyst
 description: >
-  中国A股交易分析技能。通过内置 script 直接调用 MCP 服务获取实时股票数据，
+  中国A股交易分析技能。通过内置 script 调用 vendored akshare 数据抓取模块获取 A 股综合数据，
   结合 sequential-thinking 对持仓股票进行 buy/sell/hold 决策，
   提供目标价、止损价、退出计划和风险收益比。
   适合偏好高收益、在波动中盈利的用户。Use when user provides stock codes for A-share analysis,
@@ -26,33 +26,69 @@ description: >
 
 ## 数据获取
 
-使用内置脚本 `scripts/stock_query.py` 获取实时股票数据，**无需 MCP 源连接**。
+使用内置脚本 `scripts/stock_query.py` 获取 A 股个股综合数据。
+**完全自包含**：抓取代码已 vendored 到 `scripts/vendor/akshare_stock/`，
+无任何外部代码路径依赖；数据源从原远程 MCP 服务切换为本地 akshare 抓取。
+
+单次调用一次性返回 7 面板数据（基本信息 / 当前行情 / 历史统计 / 技术信号 /
+K 线尾部 / 财务 / 板块），不再区分 brief/medium/full 级别。
+
+### 首次使用
+
+唯一外部依赖是 pandas / numpy / rich 三方包（vendored 代码的传递依赖）：
 
 ```bash
-# brief: 基本数据 + 交易数据（价格/振幅/涨跌幅/成交量/资金流向/换手率）
-python3 scripts/stock_query.py --symbol SH601689 --level brief
+pip install -r skills/stock-analyst/scripts/requirements.txt
+```
 
-# medium: brief + 财务数据（主营收入/净利润/每股收益等）
-python3 scripts/stock_query.py --symbol SH601689 --level medium
+无需 `pip install akshare`、无需其他仓库路径、无需环境变量。
+`stock_query.py` 启动时自动把 `scripts/vendor/` 注入 `sys.path`。
 
-# full: medium + 技术指标（MA/KDJ/MACD/RSI/BBands 等最近30日数据）
-python3 scripts/stock_query.py --symbol SH601689 --level full
+### 用法示例
 
-# JSON 格式输出（适合程序处理）
-python3 scripts/stock_query.py --symbol SH601689,SZ000001 --level full --format json
+```bash
+# 默认:Rich 中文面板(text 模式,直接呈现 7 面板)
+python3 scripts/stock_query.py --symbol 600519
 
-# 支持多种代码格式
-python3 scripts/stock_query.py --symbol 601689 --level brief       # 自动推断 SH
-python3 scripts/stock_query.py --symbol 601689.SH --level brief    # 显式指定
-python3 scripts/stock_query.py --symbol SH601689 --level brief     # 标准格式
+# JSON 输出(结构化,适合程序二次处理)
+python3 scripts/stock_query.py --symbol 600519 --format json
+
+# 支持多种代码格式(自动归一化为 6 位数字)
+python3 scripts/stock_query.py --symbol SH601689            # 剥前缀
+python3 scripts/stock_query.py --symbol 601689.SH           # 剥后缀
+python3 scripts/stock_query.py --symbol 601689              # 纯数字
+python3 scripts/stock_query.py --symbol 浦发银行            # 中文名(查本地缓存)
+
+# 多只股票(逗号分隔)
+python3 scripts/stock_query.py --symbol 600519,000001 --format json
+
+# 调整数据范围与板块
+python3 scripts/stock_query.py --symbol 600519 --topk 5            # 板块 Top5
+python3 scripts/stock_query.py --symbol 600519 --no-sector        # 跳过板块(更快)
+python3 scripts/stock_query.py --symbol 600519 --adjust qfq        # 前复权
+python3 scripts/stock_query.py --symbol 600519 --macd 10,20,8      # 自定义 MACD 参数
 ```
 
 **参数说明**：
-- `--symbol` / `-s`: 股票代码（必填），支持 `SH601689`、`601689`、`601689.SH` 格式，逗号分隔可查多只
-- `--level` / `-l`: 数据深度，可选 `brief`（默认）、`medium`、`full`
-- `--format` / `-f`: 输出格式，可选 `markdown`（默认）、`json`
 
-> **建议**：技术分析场景使用 `--level full`，获取完整的 MACD/RSI/KDJ/BOLL 等指标数据。
+| 参数 | 默认值 | 说明 |
+|---|---|---|
+| `--symbol` / `-s` | 必填 | 股票代码或中文名，逗号分隔多只。支持 `SH600519` / `600519.SH` / `600519` / 中文名 |
+| `--format` / `-f` | `text` | 输出格式：`text` = Rich 中文面板；`json` = 结构化 JSON（含全部 K 线 + 49 列指标） |
+| `--topk` | `10` | 概念板块 TopK |
+| `--no-sector` | 关 | 跳过概念板块抓取（更快） |
+| `--adjust` | `''` | K 线复权：`''` 不复权（与券商 APP 一致）/ `qfq` 前复权 / `hfq` 后复权 |
+| `--macd` | `12,26,9` | MACD 参数 (fast,slow,signal)，如 `10,20,8` |
+
+> **数据规模**：JSON 模式下 K 线含 49 列（基础 10 + 趋势 9 + 动量 6 + 成交量 4 + 形态 19），
+> 最近 3 年日线，一次调用产出 700+ 行结构化数据。
+>
+> **代码归一化**：所有格式都会被归一化为 6 位数字（如 `SH600519` → `600519`），
+> 中文名会通过本地缓存（`~/.cache/stock-analyst/name_to_code.json`）映射。
+> 首次使用中文名时会自动联网拉全 A 股代码-名映射表。
+>
+> **数据范围**：vendored akshare 提供基础信息 / 行情 / K 线 / 16 个技术指标 / 财务 / 板块，
+> 资金流向、北向资金、个股新闻、国际市场等需通过 `web_search` / `web_fetch` 等增强层工具补充。
 
 ### 市场环境数据
 
@@ -72,7 +108,6 @@ python3 scripts/market_env.py --format json
 - 📋 各指数详细数据：折叠展示，包含完整价格/振幅/涨跌幅/成交量/成交额多周期数据
 
 > **建议**：每次交易决策前运行该脚本，判断大盘趋势是否与个股方向一致。
-> **数据源限制**：当前 MCP 服务器仅提供 `brief/medium/full` 工具，资金流向、板块行情、国际市场等数据需额外数据源支持。
 
 **参数说明**：
 - `--format` / `-f`: 输出格式，可选 `markdown`（默认）、`json`

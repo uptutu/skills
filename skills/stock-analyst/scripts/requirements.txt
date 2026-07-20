@@ -1,0 +1,12 @@
+# stock-analyst 脚本依赖
+#
+# 安装方法(在 stock-analyst 仓库根目录):
+#   pip install -r skills/stock-analyst/scripts/requirements.txt
+#
+# 注意:不需要单独 pip install akshare —— 抓取代码已 vendored 到
+# ``scripts/vendor/akshare_stock/``,本目录通过 ``sys.path.insert`` 引入。
+# 这里只列 vendored 代码的传递依赖(数据处理 / 渲染)。
+
+pandas>=2.0
+numpy>=1.24
+rich>=13.0
