@@ -1,13 +1,26 @@
 {
   "name": "modern-front-design",
-  "version": "1.0.0",
-  "description": "现代企业级 B2B Fintech CRM 仪表盘设计技能。Light Skeuomorphism / Soft UI 风格族：浅色基调、玻璃拟态微光、克制饱和色、慷慨留白、微数据纹理。输出像素级、生产级别的设计稿。",
+  "version": "1.1.0",
+  "description": "现代企业级 B2B Fintech CRM 仪表盘设计技能（设计/审计/进度三模式）。Light Skeuomorphism / Soft UI 风格族：浅色基调、玻璃拟态微光、克制饱和色、慷慨留白。内置 design_audit.py 审计脚本，可生成现代化迁移报告、迁移方案并追踪迁移进度。",
   "author": "alex",
   "entrypoint": "SKILL.md",
   "type": "design-skill",
   "language": "markdown",
-  "dependencies": [],
-  "scripts": [],
+  "dependencies": [
+    {
+      "name": "python3",
+      "version": ">=3.6",
+      "optional": false,
+      "description": "Python 3 stdlib only (argparse, colorsys, json, os, re, sys)"
+    }
+  ],
+  "scripts": [
+    {
+      "name": "design_audit.py",
+      "path": "scripts/design_audit.py",
+      "description": "Scan a frontend project against the modern-front-design spec; emit audit reports, snapshots, and progress comparisons"
+    }
+  ],
   "tags": [
     "design",
     "ui",
@@ -17,7 +30,9 @@
     "saas",
     "glassmorphism",
     "light-skeuomorphism",
-    "soft-ui"
+    "soft-ui",
+    "audit",
+    "migration"
   ],
   "triggers": [
     "modern-front-design",
@@ -29,6 +44,12 @@
     "glassmorphism-lite",
     "fintech dashboard",
     "enterprise UI mockup",
-    "Dribbble dashboard"
+    "Dribbble dashboard",
+    "前端现代化",
+    "现代化改造",
+    "迁移报告",
+    "迁移进度",
+    "design audit",
+    "frontend modernization"
   ]
 }

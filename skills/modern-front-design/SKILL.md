@@ -1,11 +1,13 @@
 ---
 name: modern-front-design
 description: >
-  现代企业级 B2B Fintech CRM 仪表盘设计技能。
+  现代企业级 B2B Fintech CRM 仪表盘设计技能，三种模式：设计 / 审计 / 进度追踪。
   风格族：Light Skeuomorphism / Soft UI for Enterprise Finance。
   输出像素级、生产级别的设计稿：浅色基调、玻璃拟态微光、克制饱和色、慷慨留白、微数据纹理。
+  内置 design_audit.py 脚本：扫描现有前端项目生成现代化迁移报告与方案，支持快照对比追踪迁移进度。
   Use when user asks for 仪表盘/金融后台/CRM/企业 SaaS 设计、轻拟物、glassmorphism-lite、
-  fintech dashboard、enterprise UI mockup，或对现有界面提出"太暗/太密/太浮夸"等视觉不满时调用。
+  fintech dashboard、enterprise UI mockup、前端现代化改造/迁移报告/迁移进度，
+  或对现有界面提出"太暗/太密/太浮夸"等视觉不满时调用。
 ---
 
 # Modern Front Design
@@ -193,3 +195,127 @@ muted neon-free palette, Dribbble-grade polish, crisp 4K render, poster-like pre
 `light skeuomorphism` · `soft UI` · `glassmorphism-lite` · `airy enterprise dashboard` ·
 `fintech CRM` · `pale gradient hero` · `micro-data texture` · `generous whitespace` ·
 `muted neon-free palette` · `Dribbble-grade polish` · `crisp 4K render` · `poster-like presentation`
+
+---
+
+# 模式 B/C：现有项目审计与迁移
+
+第 1–12 节是**设计模式**（从零产出新设计稿）。以下三节面向**存量项目**：
+先用脚本拿到确定性扫描数据，再由你做方案综合——不要人肉 grep 整个代码库。
+
+## 13. 审计模式：现代化迁移报告
+
+当用户要求「审计 / 迁移报告 / 现代化改造方案」时进入此模式。
+
+### 步骤
+
+1. **运行审计脚本**（Python stdlib，零依赖）：
+
+```bash
+# markdown 报告（默认输出到 stdout）
+python3 scripts/design_audit.py <前端项目根目录>
+
+# 同时保存进度快照（供模式 C 对比）
+python3 scripts/design_audit.py <root> --snapshot audits/baseline.json
+
+# 原始 JSON（供程序处理）
+python3 scripts/design_audit.py <root> --format json
+```
+
+脚本输出：总分（0–100）+ 五维度得分（硬性禁忌/调色板/圆角/阴影/字体）+
+分级 findings（critical/high/medium/low，含文件与行号）+ 修复建议。
+
+2. **人工抽查**：抽 Top 违规规则对应的 2–3 个文件亲自阅读，确认误报并补充脚本看不到的语义问题（布局密度、图表类型、组件气质）。
+3. **输出迁移报告**，模板：
+
+```markdown
+## ① 现状评分卡
+| 维度 | 得分 | 主要问题 |
+（硬性禁忌 / 调色板 / 圆角 / 阴影 / 字体 + 总分，数据来自脚本）
+
+## ② P0 硬性禁忌违规清单
+| 规则 | 文件:行 | 修复动作 |
+
+## ③ 迁移方案选择
+从第 14 节 A/B/C 中选一个并说明理由（可组合）。
+
+## ④ 分阶段计划
+| 阶段 | 范围 | 涉及文件 | 验收标准（可运行脚本复测的量化目标） |
+
+## ⑤ 风险与依赖
+- 第三方组件库主题覆盖成本 / 截图回归基线 / 灰度策略
+```
+
+> **验收标准必须可复测**：例如「调色板得分 38 → 80」「no-square-corners findings 清零」，
+> 不写「看起来更现代」这种不可验证的句子。
+
+## 14. 迁移方案库
+
+按项目约束三选一（或组合）：
+
+### 方案 A — Token 先行（默认推荐，风险最低）
+
+1. 建立 design tokens：把第 3 节调色板 + 第 2 节阴影/圆角落成 CSS 变量（或 `tokens.json`）：
+
+```css
+:root {
+  --canvas: #F7F8FA; --card: #FFFFFF; --card-tint: #F4F8FD;
+  --ink: #0F172A; --ink-2: #1E293B; --ink-3: #64748B; --ink-4: #94A3B8;
+  --ok: #86E39B; --ok-bg: #E7F9EC; --err: #FF8A8A; --err-bg: #FFEDED;
+  --radius-card: 20px;
+  --shadow-card: 0 12px 32px rgba(23,43,77,0.06), 0 2px 6px rgba(23,43,77,0.04);
+  --hairline: rgba(15,23,42,0.05);
+}
+```
+
+2. 全局替换硬编码色值/圆角/阴影 → 引用变量。
+3. 页面不动结构，视觉自然收敛。
+
+**适用**：存量大、不能停业务、多页面共享样式。脚本复测时调色板/圆角/阴影三维应最先涨分。
+
+### 方案 B — 页面先行（旗舰页打样）
+
+1. 选 1 个最有代表性的核心页（通常是 KPI 总览），按第 4–8 节完整改造为标杆。
+2. 从标杆页沉淀出 Card / Chip / MetricNumber / DeltaBadge / MiniChart 等组件。
+3. 横向复制到其余页面。
+
+**适用**：需要快速向团队/决策层证明方向；设计资源集中在少数人手里。
+
+### 方案 C — 组件库先行
+
+1. 先重建共享组件（Button/Card/Chip/Avatar/StatusPill/AssistantPanel）并固化 token。
+2. 页面逐批接入新组件，旧组件标记 deprecated。
+
+**适用**：多页面组件共享度高、有专职前端、长期维护。
+
+**组合建议**：多数项目 `A → B → C` 最稳——先 token 止血，再旗舰页立标杆，最后组件化收尾。
+
+## 15. 进度追踪模式
+
+当用户问「迁移进行得怎么样 / 对比上次」时进入此模式。
+
+```bash
+# 首次：建立基线
+python3 scripts/design_audit.py <root> --snapshot audits/baseline.json
+
+# 每次迭代后：
+python3 scripts/design_audit.py <root> --snapshot audits/iter-<N>.json
+python3 scripts/design_audit.py --compare audits/baseline.json audits/iter-<N>.json
+```
+
+快照建议存目标项目的 `audits/`（或 `.modern-front-design/`）目录并随仓库提交，这样进度可追溯。
+
+对比报告输出：总分 Δ、五维度 Δ 表、已解决/新增/剩余 findings、剩余 Top 问题。
+你在此之上补充判断：
+
+- **进度评级**：🟢 按期（总分稳步上升且无新增 critical）/ 🟡 停滞 / 🔴 倒退（新增 critical 或总分下降）
+- **下阶段建议**：指向剩余 findings 中权重最高的规则，并关联第 14 节方案中的对应阶段
+
+```markdown
+## 进度报告（模板）
+- 评级：🟢/🟡/🔴
+- 总分：A → B（Δ）
+- 亮点：[已清零的规则]
+- 风险：[新增 findings / 长期停滞的维度]
+- 下一步：[具体规则 × 具体文件 × 方案 A/B/C 中的阶段]
+```
