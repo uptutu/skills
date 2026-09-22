@@ -1,0 +1,34 @@
+{
+  "name": "modern-front-design",
+  "version": "1.0.0",
+  "description": "现代企业级 B2B Fintech CRM 仪表盘设计技能。Light Skeuomorphism / Soft UI 风格族：浅色基调、玻璃拟态微光、克制饱和色、慷慨留白、微数据纹理。输出像素级、生产级别的设计稿。",
+  "author": "alex",
+  "entrypoint": "SKILL.md",
+  "type": "design-skill",
+  "language": "markdown",
+  "dependencies": [],
+  "scripts": [],
+  "tags": [
+    "design",
+    "ui",
+    "dashboard",
+    "fintech",
+    "crm",
+    "saas",
+    "glassmorphism",
+    "light-skeuomorphism",
+    "soft-ui"
+  ],
+  "triggers": [
+    "modern-front-design",
+    "仪表盘设计",
+    "金融后台",
+    "CRM 设计",
+    "企业 SaaS 设计",
+    "light skeuomorphism",
+    "glassmorphism-lite",
+    "fintech dashboard",
+    "enterprise UI mockup",
+    "Dribbble dashboard"
+  ]
+}
