@@ -101,6 +101,7 @@ npx skills add tw93/Kami -s kami               # 阶段 5 报告渲染 HTML
 
 - `skills/ford/SKILL.md` —— 技能定义
 - `skills/ford/skill.json` —— 清单
+- `skills/ford/cherry-studio.json` —— Cherry Studio 智能体导入文件（智能体页 → 导入），提示词与 SKILL.md 同步（已去 frontmatter）
 
 ## Add a New Skill
 

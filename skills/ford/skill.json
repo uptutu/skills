@@ -11,21 +11,14 @@
   "scripts": [],
   "tags": ["requirement", "first-principles", "clarification", "grill", "subagent", "planning"],
   "triggers": [
+    "ford",
     "问津",
     "问津报告",
     "需求拆解",
     "需求澄清",
-    "复述对齐",
     "第一性原理拆解",
-    "拷问边界",
     "grill 需求",
     "把我的想法变成需求",
-    "分析这个需求",
-    "帮我理一下这个需求",
-    "行动指南",
-    "领域分析",
-    "技术方案",
-    "架构问题",
-    "实现方案"
+    "帮我理一下这个需求"
   ]
 }
