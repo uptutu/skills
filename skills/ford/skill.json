@@ -1,0 +1,31 @@
+{
+  "name": "ford",
+  "version": "1.0.0",
+  "description": "问津：需求与问题拆解参谋。输入任意模糊想法、明确需求或技术问题，经复述对齐 → 第一性原理拆解 → ≤5 问边界拷问 → subagent 领域分析，交付带引用、可直接下达的方案。",
+  "author": "alex",
+  "entrypoint": "SKILL.md",
+  "type": "agent-skill",
+  "language": "markdown",
+  "dependencies": [],
+  "optionalDependencies": ["grill-me", "kami"],
+  "scripts": [],
+  "tags": ["requirement", "first-principles", "clarification", "grill", "subagent", "planning"],
+  "triggers": [
+    "问津",
+    "问津报告",
+    "需求拆解",
+    "需求澄清",
+    "复述对齐",
+    "第一性原理拆解",
+    "拷问边界",
+    "grill 需求",
+    "把我的想法变成需求",
+    "分析这个需求",
+    "帮我理一下这个需求",
+    "行动指南",
+    "领域分析",
+    "技术方案",
+    "架构问题",
+    "实现方案"
+  ]
+}

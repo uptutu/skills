@@ -1,0 +1,20 @@
+{
+  "name": "intro-pro",
+  "version": "1.0.0",
+  "description": "提示词精炼器。把口语化、有歧义的提示词改写为措辞精准、目标显式的版本，并输出可直接复制给 agent 的提示词。",
+  "author": "alex",
+  "entrypoint": "SKILL.md",
+  "type": "agent-skill",
+  "language": "markdown",
+  "dependencies": [],
+  "scripts": [],
+  "tags": ["prompt", "prompt-engineering", "rewrite", "clarity", "intent"],
+  "triggers": [
+    "intro-pro",
+    "/intro-pro",
+    "精炼提示词",
+    "优化提示词",
+    "改写 prompt",
+    "整理提示词"
+  ]
+}
