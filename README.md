@@ -88,7 +88,7 @@ python3 scripts/stock_query.py --symbol 601689 --level brief --server http://you
 /问津 <想法 / 需求 / 技术问题>
 ```
 
-或使用触发词：需求拆解 / 拷问边界 / grill 需求 / 技术方案 等。
+或使用触发词：问津 / 需求拆解 / 需求澄清 / 第一性原理拆解 / grill 需求 等。
 
 **可选依赖（不装也能跑，SKILL.md 内有降级路径）：**
 
@@ -101,7 +101,9 @@ npx skills add tw93/Kami -s kami               # 阶段 5 报告渲染 HTML
 
 - `skills/ford/SKILL.md` —— 技能定义
 - `skills/ford/skill.json` —— 清单
-- `skills/ford/cherry-studio.json` —— Cherry Studio 智能体导入文件（智能体页 → 导入），提示词与 SKILL.md 同步（已去 frontmatter）
+- `skills/ford/references/template.md` —— 交付文档模板（18 节完整结构）
+- `skills/ford/cherry-studio.json` —— Cherry Studio 智能体导入文件（智能体页 → 导入），由生成器从 SKILL.md 同步（已去 frontmatter）
+- `skills/ford/scripts/gen-cherry-studio.py` —— 生成器，改完 SKILL.md 跑 `python3 scripts/gen-cherry-studio.py` 重新同步
 
 ## Add a New Skill
 
